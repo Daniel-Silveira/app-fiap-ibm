@@ -91,21 +91,16 @@ const App = () => {
     });
     console.log("formData", formData);
     axios
-      .post(
-        `https://speech-to-text-fiap.herokuapp.com/upload/new/upload/new`,
-        formData,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNTZjM2QzOWUzOGY5NTA0Yzk1NmYxYiIsImlhdCI6MTU5MDAwNTE1MH0.Kn0U2uRoJhaB7NZ2k7g41xshaW_IlBTUWCqtIv0PyVM`,
-          },
-        }
-      )
+      .post(`https://speech-to-text-fiap.herokuapp.com/upload/new`, formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNTZjM2QzOWUzOGY5NTA0Yzk1NmYxYiIsImlhdCI6MTU5MDAwNTE1MH0.Kn0U2uRoJhaB7NZ2k7g41xshaW_IlBTUWCqtIv0PyVM`,
+        },
+      })
       .then((res) => res.data)
       .then((res) => {
         console.log("foi", new Date());
-        setMessage(res.message.trim());
         speech(res.message);
       })
       .catch((err) => {
