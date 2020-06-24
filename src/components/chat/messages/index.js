@@ -12,10 +12,18 @@ import { AntDesign } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import Select from "../../select";
 
-const Messages = ({ array, loading, refMessages, setRefMessages, sessionId }) => {
+const Messages = ({
+  array,
+  loading,
+  refMessages,
+  setRefMessages,
+  sessionId,
+}) => {
   useEffect(() => {
     !!refMessages && refMessages.scrollToEnd({ animated: true });
   }, [refMessages, array.length]);
+
+  const [scroll, setScroll] = useState(true);
 
   const onSpeak = (text) => {
     Speech.speak(text, {
@@ -26,7 +34,7 @@ const Messages = ({ array, loading, refMessages, setRefMessages, sessionId }) =>
   };
 
   return (
-    <Container ref={setRefMessages}>
+    <Container ref={setRefMessages} scrollEnabled={scroll}>
       {array.map((i, index) => (
         <Box key={index} user={i.type === "user"}>
           <Message>
@@ -56,7 +64,12 @@ const Messages = ({ array, loading, refMessages, setRefMessages, sessionId }) =>
                   <AntDesign name="sound" size={24} color="transparent" />
                 )}
                 {!!i.options && i.options.length > 0 && (
-                  <Select sessionId={sessionId} refMessages={refMessages} array={i.options} />
+                  <Select
+                    setScroll={setScroll}
+                    sessionId={sessionId}
+                    refMessages={refMessages}
+                    array={i.options}
+                  />
                 )}
               </StyledText>
             )}
