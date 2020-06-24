@@ -21,7 +21,7 @@ export const Message = styled.View`
   align-items: center;
 `;
 
-export const StyledText = styled.Text`
+export const StyledText = styled.View`
   padding: 10px;
   max-width: ${getPercentageSizeWidth(70)};
   margin: ${getRelativeSize(10)}px 0px;
@@ -33,6 +33,5 @@ export const StyledText = styled.Text`
       border-radius: 10px;
       border-bottom-right-radius: 0;
       margin-right: 5px;
-      color: #fff;
     `}
 `;

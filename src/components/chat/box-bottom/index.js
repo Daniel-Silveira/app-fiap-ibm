@@ -3,10 +3,19 @@ import { Container, Input, SendButton } from "./styled";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { sendMessage } from "../../../redux/messages";
 import { useDispatch } from "react-redux";
+import Microphone from "../microphone";
+import { Keyboard } from "react-native";
 
-const BoxBottom = ({ sessionId }) => {
+const BoxBottom = ({ sessionId, refMessages }) => {
   const [text, setText] = useState("");
   const dispatch = useDispatch();
+  const send = () => {
+    dispatch(sendMessage({ message: text, sessionId: sessionId }));
+    setText("");
+    setTimeout(() => {
+      refMessages.scrollToEnd({ animated: true });
+    }, 100);
+  };
   return (
     <Container>
       <Input
@@ -14,19 +23,15 @@ const BoxBottom = ({ sessionId }) => {
         placeholder="Digite sua mensagem"
         value={text}
         onChangeText={(text) => setText(text)}
+        onSubmitEditing={() => Keyboard.dismiss()}
       />
-      <SendButton
-        onPress={() => {
-          dispatch(sendMessage({ message: text, sessionId: sessionId }));
-          setText("");
-        }}
-      >
-        {!!text ? (
+      {!!text ? (
+        <SendButton onPress={send}>
           <MaterialIcons name="send" size={18} color="#fff" />
-        ) : (
-          <FontAwesome name="microphone" size={18} color="#fff" />
-        )}
-      </SendButton>
+        </SendButton>
+      ) : (
+        <Microphone sessionId={sessionId} />
+      )}
     </Container>
   );
 };

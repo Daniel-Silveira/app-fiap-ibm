@@ -4,8 +4,12 @@ import {
   getSessionIdSuccess,
   SEND_MESSAGE,
   sendMessageSuccess,
+  sendMessageLoading,
+  SEND_MESSAGE_AUDIO,
+  sendMessage,
 } from ".";
 import api from "../api";
+import axios from "axios";
 
 export const handleGetSession = () => {
   return createLogic({
@@ -13,10 +17,9 @@ export const handleGetSession = () => {
     process(_, dispatch, done) {
       fetch(`${api}/chat/session`)
         .then((res) => res.json())
-        .then((res) =>{
-          console.log(res)
-          dispatch(getSessionIdSuccess({ sessionId: res.sessionId }))
-        
+        .then((res) => {
+          console.log(res);
+          dispatch(getSessionIdSuccess({ sessionId: res.sessionId }));
         })
         .catch((err) => console.log(err))
         .finally(done);
@@ -39,10 +42,7 @@ export const handleSendMessage = () => {
       dispatch(
         sendMessageSuccess({ data: { text: data.message, type: "user" } })
       );
-      console.log({
-        message: data.message,
-        sessionId: data.sessionId,
-      });
+      dispatch(sendMessageLoading(true));
       fetch(`${api}/chat/send`, {
         method: "POST",
         headers: {
@@ -56,8 +56,9 @@ export const handleSendMessage = () => {
       })
         .then((res) => res.json())
         .then((res) => {
+          dispatch(sendMessageLoading(false));
           dispatch(
-            sendMessageSuccess({ data: { text: res.message, type: "bot" } })
+            sendMessageSuccess({ data: { text: res.message, type: "bot", options: res.options } })
           );
         })
         .catch((err) => console.log(err))
@@ -66,8 +67,49 @@ export const handleSendMessage = () => {
   });
 };
 
+export const handleSendMessageAudio = () => {
+  return createLogic({
+    type: SEND_MESSAGE_AUDIO,
+    process(
+      {
+        action: {
+          payload: {
+            data: { sessionId, file },
+          },
+        },
+      },
+      dispatch,
+      done
+    ) {
+      file
+        .then(({ uri }) => {
+          const formData = new FormData();
+          formData.append("audio", {
+            uri,
+            type: "audio/webm",
+            name: "speech2text",
+          });
+          return axios.post(`${api}/upload/new/${sessionId}`, formData, {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+            },
+          });
+        })
+        .then((res) => res.data)
+        .then((res) => {
+          dispatch(sendMessage({message: res.text, sessionId: res.sessionId }))
+        })
+        .catch((err) => {
+          console.log("err:", err);
+        })
+        .finally(done);
+    },
+  });
+};
+
 const configureChatLogics = () => {
-  return [handleGetSession(), handleSendMessage()];
+  return [handleGetSession(), handleSendMessage(), handleSendMessageAudio()];
 };
 
 export default configureChatLogics;
