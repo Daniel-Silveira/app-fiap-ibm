@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   getPercentageSizeWidth,
   getPercentageSizeHeight,
@@ -19,15 +19,21 @@ export const Input = styled.TextInput`
   flex: 1;
   padding: 5px;
   height: ${getPercentageSizeHeight(8)};
-
 `;
 
 export const SendButton = styled.TouchableOpacity`
   width: ${getRelativeSize(30)};
   height: ${getRelativeSize(30)};
-  background: #55EFC4;
+  background: #55efc4;
   margin-right: 10;
   border-radius: 100;
   align-items: center;
   justify-content: center;
+  ${({ speaking }) =>
+    speaking &&
+    css`
+      width: ${getRelativeSize(50)};
+      height: ${getRelativeSize(50)};
+      background: red;
+    `}
 `;

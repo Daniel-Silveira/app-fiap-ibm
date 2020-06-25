@@ -15,6 +15,7 @@ import Select from "../../select";
 const Messages = ({
   array,
   loading,
+  loadingAudio,
   refMessages,
   setRefMessages,
   sessionId,
@@ -77,6 +78,19 @@ const Messages = ({
           </Message>
         </Box>
       ))}
+      {loadingAudio && (
+        <Box user>
+          <Message user>
+            <LottieView
+              style={{ width: 60, marginRight: 3 }}
+              loop
+              source={require("../../../../assets/lf30_editor_ZNL1Ce.json")}
+              autoPlay
+            />
+            <AvatarUser />
+          </Message>
+        </Box>
+      )}
       {loading && (
         <Box>
           <Message>

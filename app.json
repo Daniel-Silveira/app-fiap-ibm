@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "app-fiap",
-    "slug": "app-fiap",
+    "name": "ChatBot",
+    "slug": "ChatBot",
+    "privacy": "unlisted",
     "platforms": [
       "ios",
       "android",
@@ -21,6 +22,10 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "versionCode": 39,
+      "package": "com.chatbotfiap343"
+    },
     "ios": {
       "supportsTablet": true
     }

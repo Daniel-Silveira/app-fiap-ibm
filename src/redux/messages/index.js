@@ -12,17 +12,20 @@ export const SEND_MESSAGE = "SEND_MESSAGE";
 export const SEND_MESSAGE_AUDIO = "SEND_MESSAGE_AUDIO";
 export const SEND_MESSAGE_SUCCESS = "SEND_MESSAGE_SUCCESS";
 export const SEND_MESSAGE_LOADING = "SEND_MESSAGE_LOADING";
+export const SEND_MESSAGE_LOADING_AUDIO = "SEND_MESSAGE_LOADING_AUDIO";
 
 export const {
   sendMessage,
   sendMessageAudio,
   sendMessageSuccess,
   sendMessageLoading,
+  sendMessageLoadingAudio,
 } = createActions({
   [SEND_MESSAGE]: (data) => ({ data }),
   [SEND_MESSAGE_AUDIO]: (data) => ({ data }),
   [SEND_MESSAGE_SUCCESS]: ({ data }) => ({ data }),
   [SEND_MESSAGE_LOADING]: (boolean) => boolean,
+  [SEND_MESSAGE_LOADING_AUDIO]: (boolean) => boolean,
 });
 
 export const INITIAL_STATE = {
@@ -35,6 +38,7 @@ export const INITIAL_STATE = {
   ],
   sessionId: "",
   loading: false,
+  loadingAudio: false,
 };
 
 const reducer = handleActions(
@@ -49,6 +53,12 @@ const reducer = handleActions(
       return {
         ...state,
         loading: payload,
+      };
+    },
+    [SEND_MESSAGE_LOADING_AUDIO]: (state, { payload }) => {
+      return {
+        ...state,
+        loadingAudio: payload,
       };
     },
     [SEND_MESSAGE_SUCCESS]: (state, { payload: { data } }) => {

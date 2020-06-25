@@ -7,6 +7,7 @@ import {
   sendMessageLoading,
   SEND_MESSAGE_AUDIO,
   sendMessage,
+  sendMessageLoadingAudio,
 } from ".";
 import api from "../api";
 import axios from "axios";
@@ -58,7 +59,9 @@ export const handleSendMessage = () => {
         .then((res) => {
           dispatch(sendMessageLoading(false));
           dispatch(
-            sendMessageSuccess({ data: { text: res.message, type: "bot", options: res.options } })
+            sendMessageSuccess({
+              data: { text: res.message, type: "bot", options: res.options },
+            })
           );
         })
         .catch((err) => console.log(err))
@@ -81,6 +84,7 @@ export const handleSendMessageAudio = () => {
       dispatch,
       done
     ) {
+      dispatch(sendMessageLoadingAudio(true));
       file
         .then(({ uri }) => {
           const formData = new FormData();
@@ -98,7 +102,10 @@ export const handleSendMessageAudio = () => {
         })
         .then((res) => res.data)
         .then((res) => {
-          dispatch(sendMessage({message: res.text, sessionId: res.sessionId }))
+          dispatch(sendMessageLoadingAudio(false));
+          dispatch(
+            sendMessage({ message: res.text, sessionId: res.sessionId })
+          );
         })
         .catch((err) => {
           console.log("err:", err);

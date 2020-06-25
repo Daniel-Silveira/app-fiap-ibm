@@ -27,6 +27,7 @@ const Chat = () => {
           refMessages={refMessages}
           setRefMessages={setRefMessages}
           loading={chat.loading}
+          loadingAudio={chat.loadingAudio}
           array={chat.messages}
           sessionId={chat.sessionId}
         />

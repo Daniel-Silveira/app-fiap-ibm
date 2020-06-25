@@ -10,7 +10,6 @@ export const Container = styled.View`
   border-radius: 10px;
   border-color: #55efc4;
   width: ${getPercentageSizeWidth(70)};
-  margin-left: ${getRelativeSize(5)};
 `;
 
 export const Preview = styled.TouchableOpacity`

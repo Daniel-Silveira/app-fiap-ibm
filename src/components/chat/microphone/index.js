@@ -3,16 +3,16 @@ import LottieView from "lottie-react-native";
 import { Audio } from "expo-av";
 import * as Permissions from "expo-permissions";
 import * as FileSystem from "expo-file-system";
-import { TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { SendButton } from "../box-bottom/styled";
 import { useDispatch } from "react-redux";
 import { sendMessageAudio } from "../../../redux/messages";
+import { Vibration } from "react-native";
 
 const Microphone = ({ sessionId }) => {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [stateRecording, setStateRecording] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const dispatch = useDispatch();
+  const [audio, setAudio] = useState(null);
 
   const startRecording = async () => {
     const recording = new Audio.Recording();
@@ -52,25 +52,30 @@ const Microphone = ({ sessionId }) => {
     try {
       await recording.prepareToRecordAsync(recordingOptions);
       await recording.startAsync();
-      console.log("inicio");
-      setStateRecording(true);
-      setTimeout(async () => {
-        await recording.stopAndUnloadAsync();
-        dispatch(
-          sendMessageAudio({
-            sessionId,
-            file: FileSystem.getInfoAsync(recording.getURI()),
-          })
-        );
-        setStateRecording(false);
-      }, 3000);
+      Vibration.vibrate(100);
+      setSpeaking(true);
+      setAudio(recording);
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <SendButton onPress={startRecording}>
+    <SendButton
+      onPressIn={startRecording}
+      onPressOut={async () => {
+        Vibration.vibrate(100);
+        await audio.stopAndUnloadAsync();
+        dispatch(
+          sendMessageAudio({
+            sessionId,
+            file: FileSystem.getInfoAsync(audio.getURI()),
+          })
+        );
+        setSpeaking(false);
+      }}
+      speaking={speaking}
+    >
       <FontAwesome name="microphone" size={18} color="#fff" />
     </SendButton>
   );
