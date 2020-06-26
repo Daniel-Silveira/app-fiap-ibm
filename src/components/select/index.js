@@ -5,7 +5,7 @@ import { EvilIcons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { sendMessage } from "../../redux/messages";
 
-const Select = ({ refMessages, array, sessionId, setScroll }) => {
+const Select = ({ refMessages, array, sessionId, setScroll, scroll }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState({});
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const Select = ({ refMessages, array, sessionId, setScroll }) => {
       <Preview
         onPress={() => {
           setOpen(!open);
-          setScroll(false);
+          setScroll(!scroll);
           setTimeout(() => {
             refMessages.scrollToEnd({ animated: true });
           }, 100);

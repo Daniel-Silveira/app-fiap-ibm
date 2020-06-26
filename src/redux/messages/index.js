@@ -32,7 +32,7 @@ export const INITIAL_STATE = {
   messages: [
     {
       text:
-        "Olá! Meu nome é Emílio e vou te ajudar a agendar uma consulta. Vamos começar? Me diga por gentileza, seu nome?",
+        "Olá! Meu nome é Emília e vou te ajudar a agendar uma consulta. Vamos começar? Me diga por gentileza, seu nome?",
       type: "bot",
     },
   ],

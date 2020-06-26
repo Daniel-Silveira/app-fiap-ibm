@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <Container>
       <AvatarDoctor />
-      <StyledText>Assistente Virtual</StyledText>
+      <StyledText>Emília</StyledText>
     </Container>
   );
 };

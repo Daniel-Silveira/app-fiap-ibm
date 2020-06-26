@@ -17,4 +17,5 @@ export const Container = styled.View`
 export const StyledText = styled.Text`
   margin-left: 10;
   font-weight: bold;
+  letter-spacing: 1.5px;
 `;

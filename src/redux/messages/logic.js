@@ -16,7 +16,7 @@ export const handleGetSession = () => {
   return createLogic({
     type: GET_SESSION_ID,
     process(_, dispatch, done) {
-      fetch(`${api}/chat/session`)
+      fetch(`${api}/messages/session`)
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
@@ -44,25 +44,56 @@ export const handleSendMessage = () => {
         sendMessageSuccess({ data: { text: data.message, type: "user" } })
       );
       dispatch(sendMessageLoading(true));
-      fetch(`${api}/chat/send`, {
+      fetch(`${api}/messages/send`, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          id: data.sessionId,
           message: data.message,
-          sessionId: data.sessionId,
         }),
       })
         .then((res) => res.json())
         .then((res) => {
-          dispatch(sendMessageLoading(false));
-          dispatch(
-            sendMessageSuccess({
-              data: { text: res.message, type: "bot", options: res.options },
-            })
-          );
+          const finishText =
+            "Muito obrigado pelas informações ! Segue abaixo as opções disponíveis. Caso não encontre uma opção que te atenda, é só retornar comigo que eu te ajudo novamente, ok?";
+          const list = [
+            {
+              name: "New Life",
+              address: "Avenida Paulista, 1500 - Bela Vista, São Paulo - SP",
+              url:
+                "https://s3-sa-east-1.amazonaws.com/projetos-artes/fullsize%2F2011%2F05%2F09%2F14%2FWDL-Logo-3859_12608_035533012_1030591541.jpg",
+            },
+            {
+              name: "Giacomazzi",
+              address:
+                "Avenida Doutor Enéas Carvalho de Aguiar, 188 - Cerqueira César, São Paulo - SP",
+              url:
+                "https://lh3.googleusercontent.com/proxy/36gxpMjfRzFDJjyt-wIaHFE959264mpTog2vYlNakWRVWwyPr8Z99nV-qNm6BwWdby0duNIxdmUtxtBTtaQA1LYC3fNiKqXFQGz0x2U",
+            },
+          ];
+          if (res.message === finishText) {
+            dispatch(sendMessageLoading(false));
+            dispatch(
+              sendMessageSuccess({
+                data: {
+                  list,
+                  text: res.message,
+                  type: "bot",
+                  options: res.options,
+                },
+              })
+            );
+          } else {
+            dispatch(sendMessageLoading(false));
+            dispatch(
+              sendMessageSuccess({
+                data: { text: res.message, type: "bot", options: res.options },
+              })
+            );
+          }
         })
         .catch((err) => console.log(err))
         .finally(done);
@@ -93,7 +124,7 @@ export const handleSendMessageAudio = () => {
             type: "audio/webm",
             name: "speech2text",
           });
-          return axios.post(`${api}/upload/new/${sessionId}`, formData, {
+          return axios.post(`${api}/speech/new/${sessionId}`, formData, {
             headers: {
               Accept: "application/json",
               "Content-Type": "multipart/form-data",

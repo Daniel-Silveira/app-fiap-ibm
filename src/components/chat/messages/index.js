@@ -11,6 +11,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import Select from "../../select";
+import ListClinics from "../../../clinics";
 
 const Messages = ({
   array,
@@ -26,11 +27,12 @@ const Messages = ({
 
   const [scroll, setScroll] = useState(true);
 
-  const onSpeak = (text) => {
+  const onSpeak = async (text) => {
     Speech.speak(text, {
       language: "pt-BR",
       pitch: 1,
       rate: 0.96,
+      volume: 1,
     });
   };
 
@@ -40,7 +42,7 @@ const Messages = ({
         <Box key={index} user={i.type === "user"}>
           <Message>
             {index !== 0 && i.type !== "user" && (
-              <View style={{ alignItems: "center" }}>
+              <View style={{ alignItems: "center", marginTop: 20 }}>
                 <AvatarDoctor />
                 <TouchableOpacity onPress={() => onSpeak(i.text)}>
                   <AntDesign name="sound" size={24} color="#55EFC4" />
@@ -66,6 +68,7 @@ const Messages = ({
                 )}
                 {!!i.options && i.options.length > 0 && (
                   <Select
+                    scroll={scroll}
                     setScroll={setScroll}
                     sessionId={sessionId}
                     refMessages={refMessages}
@@ -76,6 +79,7 @@ const Messages = ({
             )}
             {i.type === "user" && <AvatarUser />}
           </Message>
+          {i.list && i.list.length > 0 && <ListClinics array={i.list} />}
         </Box>
       ))}
       {loadingAudio && (

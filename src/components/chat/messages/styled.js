@@ -18,7 +18,6 @@ export const Box = styled.View`
 
 export const Message = styled.View`
   flex-direction: row;
-  align-items: center;
 `;
 
 export const StyledText = styled.View`
