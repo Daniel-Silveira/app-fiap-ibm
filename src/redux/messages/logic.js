@@ -16,7 +16,7 @@ export const handleGetSession = () => {
   return createLogic({
     type: GET_SESSION_ID,
     process(_, dispatch, done) {
-      fetch(`${api}/messages/session`)
+      fetch(`${api}/chat/session`)
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
@@ -44,21 +44,20 @@ export const handleSendMessage = () => {
         sendMessageSuccess({ data: { text: data.message, type: "user" } })
       );
       dispatch(sendMessageLoading(true));
-      fetch(`${api}/messages/send`, {
+      fetch(`${api}/chat/send`, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: data.sessionId,
+          sessionId: data.sessionId,
           message: data.message,
         }),
       })
         .then((res) => res.json())
         .then((res) => {
-          const finishText =
-            "Muito obrigado pelas informações ! Segue abaixo as opções disponíveis. Caso não encontre uma opção que te atenda, é só retornar comigo que eu te ajudo novamente, ok?";
+          const finishText = "Muito obrigado pelas informações";
           const list = [
             {
               name: "New Life",
@@ -74,7 +73,7 @@ export const handleSendMessage = () => {
                 "https://lh3.googleusercontent.com/proxy/36gxpMjfRzFDJjyt-wIaHFE959264mpTog2vYlNakWRVWwyPr8Z99nV-qNm6BwWdby0duNIxdmUtxtBTtaQA1LYC3fNiKqXFQGz0x2U",
             },
           ];
-          if (res.message === finishText) {
+          if (res.message.slice(0, 32) === finishText) {
             dispatch(sendMessageLoading(false));
             dispatch(
               sendMessageSuccess({
@@ -124,7 +123,7 @@ export const handleSendMessageAudio = () => {
             type: "audio/webm",
             name: "speech2text",
           });
-          return axios.post(`${api}/speech/new/${sessionId}`, formData, {
+          return axios.post(`${api}/upload/new/${sessionId}`, formData, {
             headers: {
               Accept: "application/json",
               "Content-Type": "multipart/form-data",
